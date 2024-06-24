@@ -1,0 +1,40 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - nginx
+  - python3-pip
+
+write_files:
+  - path: /etc/nginx/nginx.conf
+    encoding: b64
+    content: ${nginx_conf}
+  - path: /usr/local/bin/rotate-certs.sh
+    encoding: b64
+    content: ${rotate_certs_sh}
+    permissions: "0744"
+  - path: /usr/local/bin/lambda-listener.py
+    encoding: b64
+    content: ${lambda_listener_py}
+  - path: /etc/systemd/system/lambda-listener.service
+    content: |
+      [Unit]
+      Description=Lambda Listener
+      After=network.target
+
+      [Service]
+      ExecStart=python3 /usr/local/bin/lambda-listener.py
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - mkdir -p /etc/nginx/certs
+  - pip3 install --user fastapi
+  - systemctl daemon-reload
+  - systemctl enable --now lambda-listener.service
+  - sleep 5
+  - curl -X POST localhost:8080/update
+  - systemctl enable --now nginx
