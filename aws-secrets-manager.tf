@@ -21,7 +21,7 @@ resource "tls_self_signed_cert" "test" {
 }
 
 resource "aws_secretsmanager_secret" "cert_key_pair" {
-  name = local.name_prefix
+  name = local.test_server_name
 
   tags = {
     "${var.secrets_manager_target_tag}" = ""
