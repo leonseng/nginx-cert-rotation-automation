@@ -15,6 +15,7 @@ locals {
   name_prefix          = random_id.id.dec
   my_ip                = chomp(data.http.myip.response_body)
   lambda_function_name = local.name_prefix
+  test_server_name     = "${local.name_prefix}.example.com"
 }
 
 resource "aws_vpc" "this" {

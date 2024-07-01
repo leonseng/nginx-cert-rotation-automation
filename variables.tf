@@ -14,7 +14,7 @@ variable "aws_az_count" {
 
 variable "project_name" {
   type    = string
-  default = "nginx-dynamic-tls-aws-"
+  default = "nginx-cert-rotation-aws-"
 }
 
 variable "ssh_public_key" {
@@ -25,11 +25,11 @@ variable "ssh_public_key" {
 variable "secrets_manager_target_tag" {
   description = "Tag name for discovering secrets containing NGINX cert key pair"
   type        = string
-  default     = "nginx-dynamic-tls-aws"
+  default     = "nginx-cert-rotation-aws"
 }
 
 variable "nginx_ec2_target_tag" {
   description = "Tag name for Lambda to discover NGINX instances"
   type        = string
-  default     = "nginx-dynamic-tls-aws"
+  default     = "nginx-cert-rotation-aws"
 }

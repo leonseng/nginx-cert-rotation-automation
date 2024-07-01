@@ -104,7 +104,12 @@ resource "aws_instance" "nginx" {
   key_name      = aws_key_pair.ssh_access.key_name
   subnet_id     = aws_subnet.this[count.index].id
   user_data = templatefile("${path.module}/files/nginx/cloud-init.yaml", {
-    nginx_conf = base64encode(file("${path.module}/files/nginx/nginx.conf"))
+    nginx_conf = base64encode(
+      templatefile(
+        "${path.module}/files/nginx/nginx.conf",
+        { nginx_server_name : local.test_server_name }
+      )
+    )
     rotate_certs_sh = base64encode(
       templatefile(
         "${path.module}/files/nginx/rotate-certs.sh",
